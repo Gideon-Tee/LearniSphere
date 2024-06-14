@@ -2,22 +2,50 @@
 
 
 {% block content %}
-    <h2>HOME TEMPLATE</h2>
-    <div>
-        <h3>Available Rooms</h3>
-        <span><a href="{% url 'create-room' %}"><button>Create Room</button></a></span>
-    </div>
-    <hr> 
-    {% for room in rooms %}
-    <div>
-        <div style="display: flexbox;">
-            <a href="{% url 'update-room' room.id %}">Edit</a>
-            <a href="{% url 'delete-room' room.id %}" style="float: end;">Delete</a>
+<style>
+    .home-container {
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+    }
+    a {
+        text-decoration: none;
+    }
+</style>
 
-        </div>
-        <h5>{{room.id}} -- <a href="{% url 'room' room.id %}">{{room.name}}</a> <span>@ {{room.host.username}}</span> </h5>
-        <span>{{room.topic.name}}</span><hr>
+<div class="home-container">
+    <div>
+        <h3>Browse Topics</h3>
+        
+        <ul>
+            <li><a href="{% url 'home' %}">All</a></li><br>
+            {% for topic in topics %}
+            <li><a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a></li>
+            <br>
+            {% endfor %}
+        </ul>
+            
     </div>
-    {% endfor %}
+    <div>
+        <!-- <h2>HOME TEMPLATE</h2> -->
+        <div>
+            <h2 style="display: inline;">Available Rooms [ {{rooms_count}} ] </h2> 
+            <span style="float: inline-end;"><a href="{% url 'create-room' %}"><button>Create Room</button></a></span>
+            
+        </div>
+        <hr> 
+        {% for room in rooms %}
+        <div>
+            <div style="display: flexbox;">
+                <a href="{% url 'update-room' room.id %}">Edit</a> || 
+                <a href="{% url 'delete-room' room.id %}" style="float: end;">Delete</a>
+    
+            </div>
+            <h3><a href="{% url 'room' room.id %}">{{room.name}}</a> <span>@ {{room.host.username}}</span> </h3>
+            <span>{{room.topic.name}}</span><hr>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
 {% endblock content %}
     
