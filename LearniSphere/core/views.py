@@ -44,6 +44,7 @@ def update_room(request, pk):
 
     context = {
         'room': room,
+        'form': form
     }
     return render(request, 'core/room_form.html', context)
 
