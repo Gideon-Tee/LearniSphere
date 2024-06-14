@@ -3,5 +3,14 @@
 
 {% block content %}
     <h2>HOME TEMPLATE</h2>
+    <div>
+        <h3>Available Rooms</h3>
+    </div>
+    <div>
+        {% for room in rooms %}
+        <h5>{{room.id}} -- <a href="{% url 'room' room.id %}">{{room.name}}</a> </h5>
+        <span>{{room.topic.name}}</span><hr>
+        {% endfor %}
+    </div>
 {% endblock content %}
     

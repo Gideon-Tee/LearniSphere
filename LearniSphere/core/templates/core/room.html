@@ -2,6 +2,14 @@
 
 
 {% block content %}
-    <h2>ROOM TEMPLATE</h2>
+    <h2>ROOM TEMPLATE</h2><hr>
+
+    <div>
+        <h3>{{room.name}}</h3>
+        <span>@{{room.host.username}}</span>
+        <blockquote>
+            {{room.description}}
+        </blockquote>
+    </div>
 {% endblock content %}
     
