@@ -5,12 +5,19 @@
     <h2>HOME TEMPLATE</h2>
     <div>
         <h3>Available Rooms</h3>
+        <span><a href="{% url 'create-room' %}"><button>Create Room</button></a></span>
     </div>
+    <hr> 
+    {% for room in rooms %}
     <div>
-        {% for room in rooms %}
-        <h5>{{room.id}} -- <a href="{% url 'room' room.id %}">{{room.name}}</a> </h5>
+        <div style="display: flexbox;">
+            <a href="{% url 'update-room' room.id %}">Edit</a>
+            <a href="{% url 'delete-room' room.id %}" style="float: end;">Delete</a>
+
+        </div>
+        <h5>{{room.id}} -- <a href="{% url 'room' room.id %}">{{room.name}}</a> <span>@ {{room.host.username}}</span> </h5>
         <span>{{room.topic.name}}</span><hr>
-        {% endfor %}
     </div>
+    {% endfor %}
 {% endblock content %}
     
