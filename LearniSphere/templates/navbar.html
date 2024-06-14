@@ -1,4 +1,4 @@
-<div style="display: grid; grid-template-columns: 2fr 4fr;">
+<div style="display: grid; grid-template-columns: 2fr 5fr 1fr;">
     <div>
         <h1><a href="/">NAVBAR</a></h1>
     </div>
@@ -7,6 +7,16 @@
         <form action="" method="get">
             search <input type="text" name="q">
         </form>
+    </div>
+
+    <div style="margin-top: 2rem;">
+        
+        {% if user.is_authenticated %}
+            {{request.user | capfirst}} || <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}" style="text-decoration: none; color: black;">Login</a>
+        {% endif %}
+                
     </div>
 
 </div>
