@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import auth
 from django.contrib import messages
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from .models import Room, Topic
 from django.db.models import Q
@@ -9,28 +10,6 @@ from .forms import RoomForm
 
 
 
-def login(request):
-
-    if request.user.is_authenticated:
-        return redirect('home')
-    
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-
-        user = auth.authenticate(username=username, password=password)
-
-        if user is not None:
-            auth.login(request, user)
-            return redirect('home')
-        else:
-            messages.error(request, 'invalid credentials')
-    context = {}
-    return render(request, 'core/login_register.html', context)
-
-def logout(request):
-    auth.logout(request)
-    return redirect('home')
 
 def home(request):
     
@@ -95,3 +74,51 @@ def delete_room(request, pk):
         return redirect('home')
 
     return render(request, 'core/delete.html', {'obj': room.name})
+
+
+
+
+def login(request):
+    page = 'login'
+
+    if request.user.is_authenticated:
+        return redirect('home')
+    
+    if request.method == 'POST':
+        username = request.POST['username'].lower()
+        password = request.POST['password']
+
+        user = auth.authenticate(username=username, password=password)
+
+        if user is not None:
+            auth.login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'invalid credentials')
+    context = {
+        'page': page
+    }
+    return render(request, 'core/login_register.html', context)
+
+def logout(request):
+    auth.logout(request)
+    return redirect('home')
+
+def register(request):
+    page = 'register'
+    form = UserCreationForm()
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            auth.login(request, user)
+            return redirect('home')
+        
+    context = {
+        'page': page,
+        'form': form
+    }
+    return render(request, 'core/login_register.html', context)
