@@ -2,35 +2,79 @@
 
 
 {% block content %}
-    <h2>{{room.name}}</h2>
 
-    <div>
-        <span>Hosted by @{{room.host.username}}</span>
-        <p>Description</p>
-        <blockquote>
-            {{room.description}}
-        </blockquote>
-    </div>
+<style>
+    .room-container {
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+        padding: 18px;
+    }
+    .room-details {
+        padding-bottom: 12px;
+        margin-right: 12px;
+    }
+    .room-participants {
+        border: 1px rgb(114, 127, 136) solid;
+        padding-left: 12px;
+    }
+</style>
 
-    <h3>Conversation</h3><hr>
-    <div class="comment-wrapper">
-        
-        {% for message in room_messages reversed %}
-            <div>
-                <p>@{{message.user}} -- <small>{{message.created | timesince}} ago</small> </p>
-                <p style="font-weight: bold;">{{message}}</p>
-                <hr>
-            </div>
-        {% endfor %}
+<div class="room-container">
+
+    <div class="room-details">
+        <h2>{{room.name}}</h2>
+
+        <div>
+            <span>Hosted by @{{room.host.username}}</span>
+            <p>Description</p>
+            <blockquote>
+                {{room.description}}
+            </blockquote>
+        </div>
+        <h3>Conversation</h3><hr>
+        <div class="comment-wrapper">
             
+            {% for message in room_messages reversed %}
+                <div>
+                    <p>
+                        @{{message.user}} -- <small>{{message.created | timesince}} ago</small>
+                        
+                        {% if message.user == request.user %}
+                        <span style="float: right;"><a href="{% url 'delete-message' message.id %}">Delete</a></span>
+                            
+                        {% endif %}
+                             
+                    </p>
+                    <p style="font-weight: bold;">{{message}}</p>
+                    <hr>
+                </div>
+            {% endfor %}
+                
+        </div>
+        {% if user.is_authenticated %}
+        <div class="comment-form">
+            <form action="" method="post">
+                {% csrf_token %}
+
+                <input type="text" name="message" placeholder="Write your message here ..." style="width: 400px;">
+            </form>
+        </div>
+            
+        {% endif %}
+
     </div>
 
-    <div class="comment-form">
-        <form action="" method="post">
-            {% csrf_token %}
+    <div class="room-participants">
+        <h3>Participants</h3> <hr>
 
-            <input type="text" name="message" placeholder="Write your message here ..." style="width: 400px;">
-        </form>
+        <ul>
+        {% for participant in participants %}
+            <li>@{{participant.username}}</li> <br>
+        {% endfor %} 
+        </ul>
+        
     </div>
+      
+</div>
 {% endblock content %}
     

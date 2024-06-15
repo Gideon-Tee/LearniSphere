@@ -28,9 +28,18 @@ def home(request):
     return render(request, 'core/home.html', context)
 
 
+def delete_message(request, pk):
+    message = Message.objects.get(id=pk)
+    room = message.room.id
+    message.delete()
+
+    return redirect('room', room)
+
+
 def room(request, pk):
     room = Room.objects.get(id=int(pk))
     room_messages = room.message_set.all()
+    participants = room.participants.all()
 
     if request.method == 'POST':
         new_message = request.POST['message']
@@ -41,12 +50,14 @@ def room(request, pk):
                 room = room,
                 body = new_message
             )
+            room.participants.add(request.user)
             return redirect('room', pk=room.id)
 
 
     context = {
         'room': room,
-        'room_messages': room_messages
+        'room_messages': room_messages,
+        'participants': participants
     }
     return render(request, 'core/room.html', context)
 
