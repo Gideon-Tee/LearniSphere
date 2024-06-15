@@ -20,10 +20,16 @@ def home(request):
         Q(description__icontains = q)
     )
     topics = Topic.objects.all()
+    room_messages = Message.objects.filter(
+        Q(room__name__icontains=q) |
+        Q(room__description__icontains = q) |
+        Q(room__topic__name__icontains = q)
+    )
     context = {
         'rooms': rooms,
         'topics': topics,
-        'rooms_count': rooms.count()
+        'rooms_count': rooms.count(),
+        'room_messages': room_messages
     }
     return render(request, 'core/home.html', context)
 
