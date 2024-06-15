@@ -15,56 +15,23 @@
 
 <div class="home-container">
     <div>
-        <h3>Browse Topics</h3>
         
-        <ul>
-            <li><a href="{% url 'home' %}">All</a></li><br>
-            {% for topic in topics %}
-            <li><a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a></li>
-            <br>
-            {% endfor %}
-        </ul>
+        {% include 'core/topics_component.html' %}
             
     </div>
+
     <div>
-        <!-- <h2>HOME TEMPLATE</h2> -->
         <div>
             <h2 style="display: inline;">Available Rooms [ {{rooms_count}} ] </h2> 
             <span style="float: inline-end;"><a href="{% url 'create-room' %}"><button>Create Room</button></a></span>
             
         </div>
         <hr> 
-        {% for room in rooms %}
-        <div>
-            <div style="display: flexbox;">
-                
-                {% if user.is_authenticated and user == room.host %}
-                <a href="{% url 'update-room' room.id %}">Edit</a> || 
-                <a href="{% url 'delete-room' room.id %}" style="float: end;">Delete</a>
-                    
-                {% endif %}
-                    
-    
-            </div>
-            <h3><a href="{% url 'room' room.id %}">{{room.name}}</a> <span>@ {{room.host.username}}</span> </h3>
-            <span>{{room.topic.name}}</span><hr>
-        </div>
-        {% endfor %}
-
+        {% include 'core/feed_component.html' %}
     </div>
 
     <div style="margin-left: 12px;">
-        <h3>Recent Activity</h3> <hr>
-        
-        {% for message in room_messages reversed %}
-            <div>
-                <small>@{{message.user.username}} <span style="float: right; opacity: .5;"> {{message.created | timesince}} ago</span></small>
-                <br><small>Replied to "<span>{{message.room}}</span>" </small>
-                <p>{{message}}</p>
-                
-            </div>
-            <br>
-        {% endfor %}
+       {% include 'core/activity_component.html' %}
             
     </div>
 </div>

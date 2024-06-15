@@ -1,0 +1,21 @@
+<div>
+    <!-- <h2>HOME TEMPLATE</h2> -->
+    
+    {% for room in rooms %}
+    <div>
+        <div style="display: flexbox;">
+            
+            {% if user.is_authenticated and user == room.host %}
+            <a href="{% url 'update-room' room.id %}">Edit</a> || 
+            <a href="{% url 'delete-room' room.id %}" style="float: end;">Delete</a>
+                
+            {% endif %}
+                
+
+        </div>
+        <h3><a href="{% url 'room' room.id %}">{{room.name}}</a> <span>@ {{room.host.username}}</span> </h3>
+        <span>{{room.topic.name}}</span><hr>
+    </div>
+    {% endfor %}
+
+</div>
