@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import auth
+from django.contrib.auth.models import auth, User
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -112,6 +112,13 @@ def delete_room(request, pk):
 
     return render(request, 'core/delete.html', {'obj': room.name})
 
+
+def profile(request, pk):
+    user = User.objects.get(id=int(pk))
+    context = {
+        'user_': user
+    }
+    return render(request, 'core/profile.html', context)
 
 
 def login(request):

@@ -13,7 +13,10 @@
                 
 
         </div>
-        <h3><a href="{% url 'room' room.id %}">{{room.name}}</a> <span>@ {{room.host.username}}</span> </h3>
+        <h3>
+            <a href="{% url 'room' room.id %}">{{room.name}}</a> 
+            <small><a href="{% url 'profile' room.host.id %}">@{{room.host.username}}</a> </small>
+        </h3>
         <span>{{room.topic.name}}</span><hr>
     </div>
     {% endfor %}

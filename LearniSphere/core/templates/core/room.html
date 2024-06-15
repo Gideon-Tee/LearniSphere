@@ -37,7 +37,14 @@
             {% for message in room_messages reversed %}
                 <div>
                     <p>
-                        @{{message.user}} -- <small style="opacity: .7;">{{message.created | timesince}} ago</small>
+                        
+                        {% if user.is_authenticated and user.username == message.user.username %}
+                        <a href="{% url 'profile' message.user.id %}">@{{message.user}} (you)</a> -- 
+                            
+                        {% else %}
+                        <a href="{% url 'profile' message.user.id %}">@{{message.user}}</a> -- 
+                        {% endif %}
+                        <small style="opacity: .7;">{{message.created | timesince}} ago</small>
                         
                         {% if message.user == request.user %}
                         <span style="float: right;"><a href="{% url 'delete-message' message.id %}">Delete</a></span>
@@ -69,7 +76,7 @@
 
         <ul>
         {% for participant in participants %}
-            <li>@{{participant.username}}</li> <br>
+            <li> <a href="{% url 'profile' participant.id %}">@{{participant.username}}</a> </li> <br>
         {% endfor %} 
         </ul>
         
