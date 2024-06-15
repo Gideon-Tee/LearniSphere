@@ -3,12 +3,12 @@ from django.contrib.auth.models import auth
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from .models import Room, Topic
+from .models import Room, Topic, Message
 from django.db.models import Q
 from .forms import RoomForm
+
+
 # Create your views here.
-
-
 
 
 def home(request):
@@ -30,11 +30,27 @@ def home(request):
 
 def room(request, pk):
     room = Room.objects.get(id=int(pk))
+    room_messages = room.message_set.all()
+
+    if request.method == 'POST':
+        new_message = request.POST['message']
+        
+        if new_message != None or new_message != '':
+            Message.objects.create(
+                user = request.user,
+                room = room,
+                body = new_message
+            )
+            return redirect('room', pk=room.id)
+
 
     context = {
-        'room': room
+        'room': room,
+        'room_messages': room_messages
     }
     return render(request, 'core/room.html', context)
+
+
 
 @login_required(login_url='login')
 def create_room(request):
@@ -47,6 +63,8 @@ def create_room(request):
 
     context = {'form': form}
     return render(request, 'core/room_form.html', context)
+
+
 
 @login_required(login_url='login')
 def update_room(request, pk):
@@ -65,6 +83,8 @@ def update_room(request, pk):
     }
     return render(request, 'core/room_form.html', context)
 
+
+
 @login_required(login_url='login')
 def delete_room(request, pk):
     room = Room.objects.get(id=int(pk))
@@ -74,7 +94,6 @@ def delete_room(request, pk):
         return redirect('home')
 
     return render(request, 'core/delete.html', {'obj': room.name})
-
 
 
 
@@ -100,9 +119,13 @@ def login(request):
     }
     return render(request, 'core/login_register.html', context)
 
+
+
 def logout(request):
     auth.logout(request)
     return redirect('home')
+
+
 
 def register(request):
     page = 'register'

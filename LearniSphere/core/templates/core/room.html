@@ -2,14 +2,35 @@
 
 
 {% block content %}
-    <h2>ROOM TEMPLATE</h2><hr>
+    <h2>{{room.name}}</h2>
 
     <div>
-        <h3>{{room.name}}</h3>
-        <span>@{{room.host.username}}</span>
+        <span>Hosted by @{{room.host.username}}</span>
+        <p>Description</p>
         <blockquote>
             {{room.description}}
         </blockquote>
+    </div>
+
+    <h3>Conversation</h3><hr>
+    <div class="comment-wrapper">
+        
+        {% for message in room_messages reversed %}
+            <div>
+                <p>@{{message.user}} -- <small>{{message.created | timesince}} ago</small> </p>
+                <p style="font-weight: bold;">{{message}}</p>
+                <hr>
+            </div>
+        {% endfor %}
+            
+    </div>
+
+    <div class="comment-form">
+        <form action="" method="post">
+            {% csrf_token %}
+
+            <input type="text" name="message" placeholder="Write your message here ..." style="width: 400px;">
+        </form>
     </div>
 {% endblock content %}
     
