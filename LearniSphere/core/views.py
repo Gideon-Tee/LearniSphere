@@ -115,8 +115,14 @@ def delete_room(request, pk):
 
 def profile(request, pk):
     user = User.objects.get(id=int(pk))
+    rooms = user.room_set.all()
+    room_messages = user.message_set.all()
+    topics = Topic.objects.all()
     context = {
-        'user_': user
+        'user_': user,
+        'rooms': rooms,
+        'room_messages': room_messages,
+        'topics': topics
     }
     return render(request, 'core/profile.html', context)
 
